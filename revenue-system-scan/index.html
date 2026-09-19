@@ -94,6 +94,10 @@
     text-decoration:none; cursor:pointer; box-shadow:var(--shadow);
   }
   .btn .arrow{font-family:'IBM Plex Mono',monospace;}
+  .btn-secondary{
+    background:transparent; color:var(--text); border:1px solid var(--line);
+    box-shadow:none;
+  }
   .cta-row{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
   .cta-note{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted);}
 
@@ -140,15 +144,34 @@
   .submit-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:6px;}
   .privacy-note{font-size:12.5px; color:var(--muted);}
 
-  #confirm{display:none; text-align:center; padding:34px 16px;}
-  #confirm.show{display:block;}
-  #confirm .mark{
+  #diagnosis{display:none; padding:8px 4px;}
+  #diagnosis.show{display:block;}
+  .diag-result{text-align:center; padding:20px 8px 8px;}
+  .diag-result .mark{
     width:44px;height:44px;border-radius:50%;background:var(--accent-soft);
     color:var(--accent); display:flex; align-items:center; justify-content:center;
     margin:0 auto 16px; font-size:20px; font-family:'IBM Plex Mono',monospace;
   }
-  #confirm h3{margin:0 0 8px;}
-  #confirm p{color:var(--muted); margin:0; font-size:14.5px;}
+  .diag-result h3{margin:0 0 10px;}
+  .diag-result .diag-explain{
+    color:var(--muted); margin:0 auto 26px; font-size:15px; line-height:1.6;
+    max-width:60ch; text-align:left;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:18px 20px;
+  }
+  .ask-row{border-top:1px solid var(--line); padding-top:22px;}
+  .ask-q{font-weight:600; margin:0 0 14px; font-size:15.5px;}
+  .ask-buttons{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+
+  #booking{display:none; margin-top:26px; border-top:1px solid var(--line); padding-top:26px; text-align:left;}
+  #booking.show{display:block;}
+  #booking h3{margin:0 0 6px; text-align:center;}
+  #booking .booking-sub{color:var(--muted); font-size:14px; text-align:center; margin:0 0 20px;}
+  .calendly-inline-widget{border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  .contact-row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:18px;}
+
+  #noThanks{display:none; text-align:center; padding-top:20px; border-top:1px solid var(--line); margin-top:22px;}
+  #noThanks.show{display:block;}
+  #noThanks p{color:var(--muted); font-size:14.5px; margin:0;}
 
   footer{border-top:1px solid var(--line); padding-block:28px 40px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;}
   footer .mono{color:var(--muted); font-size:12px;}
@@ -289,10 +312,31 @@
           </p>
         </form>
       </div>
-      <div id="confirm">
-        <div class="mark">✓</div>
-        <h3>Request received</h3>
-        <p>I'll look at what you shared and get back to you personally with your scan.</p>
+      <div id="diagnosis">
+        <div class="diag-result">
+          <div class="mark">✓</div>
+          <h3 id="diagTitle">Here's what's likely going on</h3>
+          <p class="diag-explain" id="diagBody"></p>
+          <div class="ask-row">
+            <p class="ask-q">Want help actually fixing this — an audit, or hands-on support building it out?</p>
+            <div class="ask-buttons">
+              <button type="button" id="yesHelp" class="btn"><span>Yes, help me</span><span class="arrow">→</span></button>
+              <button type="button" id="noHelp" class="btn btn-secondary">Not right now</button>
+            </div>
+          </div>
+        </div>
+        <div id="booking">
+          <h3>Book a time, or reach out directly</h3>
+          <p class="booking-sub">Pick whatever's easiest — a call slot, a phone call, or WhatsApp.</p>
+          <div class="calendly-inline-widget" data-url="https://calendly.com/sabirhussain05" style="min-width:320px;height:700px;"></div>
+          <div class="contact-row">
+            <a class="btn btn-secondary" href="tel:+12027431799">Call (202) 743-1799</a>
+            <a class="btn btn-secondary" href="https://wa.me/923007124422" target="_blank" rel="noopener">WhatsApp +92 300 7124422</a>
+          </div>
+        </div>
+        <div id="noThanks">
+          <p>No problem — I'll still follow up personally by email with your scan notes. Reach out anytime: (202) 743-1799 or WhatsApp +92 300 7124422.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -306,16 +350,49 @@
 <script>
 (function(){
   try{
+    var PAIN_INFO = {
+      'LEAD-DELAY': "Your leads are likely going cold because nobody — or nothing — reaches them in the window when they're actually paying attention. Interest craters fast after someone raises their hand: past the first hour or so, most people have already moved on, forgotten why they filled out the form, or found someone else who answered first. If intake still depends on a person checking email or a form manually, that's the gap. It's rarely the offer itself.",
+      'NO-QUALIFY': "Right now, every submission probably looks the same to you — a name and an email — so a serious buyer and a browsing tire-kicker get the exact same treatment and end up in the same queue. Without something upfront that separates real intent from curiosity (a qualifying question, a scoring rule, a filter before the calendar), your best leads get diluted by noise, and by the time you reach them, the urgency that got them to raise their hand in the first place has already faded.",
+      'MANUAL-CHASE': "If a person still has to remember to text, email, or DM every new lead by hand, the real bottleneck in your system is a human's memory and bandwidth — not your offer or your traffic. That's manageable at low volume, but the moment you get busy, run an ad, or take a day off, follow-up is the first thing that quietly slips, and it slips silently: you don't even see the leads you lost. The fix isn't replying faster, it's removing the requirement that someone has to remember to reply at all.",
+      'BROKEN-HANDOFF': "Somewhere between your ad or content, your landing page, and your CRM, the connection breaks — meaning a lead can complete every step (see the ad, land on the page, even book or buy) and your system still can't tell you which piece actually did the work. That's not just an attribution annoyance: it means any automation you try to build downstream, like a follow-up sequence, can't fire reliably if it doesn't reliably know the lead exists in the first place.",
+      'NOT-SURE': "That's honestly the most common answer, and it's usually not one clean problem — it's a handful of small gaps compounding: a slightly slow response here, a lead that never got tagged there, a step that behaves differently depending on which page someone came from. Guessing at fixes without seeing the actual path a lead takes through your systems tends to waste more time than it saves. That's exactly what a real audit is for — tracing your setup end-to-end instead of assuming where the leak is."
+    };
+
+    function painCode(value){
+      if(!value) return 'NOT-SURE';
+      if(value.indexOf('Not sure') === 0) return 'NOT-SURE';
+      var code = value.split(' — ')[0].trim();
+      return PAIN_INFO[code] ? code : 'NOT-SURE';
+    }
+
     var form = document.getElementById('scanForm');
     var formview = document.getElementById('formview');
-    var confirmEl = document.getElementById('confirm');
+    var diagnosis = document.getElementById('diagnosis');
+    var diagBody = document.getElementById('diagBody');
     var errorNote = document.getElementById('formError');
+    var yesHelp = document.getElementById('yesHelp');
+    var noHelp = document.getElementById('noHelp');
+    var booking = document.getElementById('booking');
+    var noThanks = document.getElementById('noThanks');
+    var askRow = document.querySelector('.ask-row');
+
+    function loadCalendly(){
+      if(document.getElementById('calendlyScript')) return;
+      var s = document.createElement('script');
+      s.id = 'calendlyScript';
+      s.src = 'https://assets.calendly.com/assets/external/widget.js';
+      s.async = true;
+      document.body.appendChild(s);
+    }
+
     if(form){
       form.addEventListener('submit', function(e){
         e.preventDefault();
         var btn = form.querySelector('button[type="submit"]');
         if(btn){ btn.disabled = true; btn.style.opacity = '0.7'; }
         if(errorNote){ errorNote.style.display = 'none'; }
+        var painSelect = document.getElementById('pain');
+        var code = painCode(painSelect ? painSelect.value : '');
         var data = new FormData(form);
         fetch('https://formspree.io/f/xoevvgrw', {
           method: 'POST',
@@ -323,8 +400,9 @@
           headers: { 'Accept': 'application/json' }
         }).then(function(res){
           if(res.ok){
+            if(diagBody){ diagBody.textContent = PAIN_INFO[code]; }
             formview.style.display = 'none';
-            confirmEl.classList.add('show');
+            diagnosis.classList.add('show');
           } else {
             throw new Error('bad status');
           }
@@ -334,9 +412,28 @@
         });
       });
     }
+
+    if(yesHelp){
+      yesHelp.addEventListener('click', function(){
+        if(askRow){ askRow.style.display = 'none'; }
+        booking.classList.add('show');
+        loadCalendly();
+        setTimeout(function(){
+          var widget = document.querySelector('.calendly-inline-widget');
+          if(widget && !widget.querySelector('iframe')){
+            widget.outerHTML = '<a class="btn" href="https://calendly.com/sabirhussain05" target="_blank" rel="noopener" style="display:flex;justify-content:center;"><span>Open booking calendar</span><span class="arrow">→</span></a>';
+          }
+        }, 3500);
+      });
+    }
+    if(noHelp){
+      noHelp.addEventListener('click', function(){
+        if(askRow){ askRow.style.display = 'none'; }
+        noThanks.classList.add('show');
+      });
+    }
   }catch(e){}
 })();
 </script>
 </body>
 </html>
-
