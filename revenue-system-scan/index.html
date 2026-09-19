@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Revenue System Scan | Systems with Sabir</title>
+<meta name="description" content="Free Revenue System Scan — find out where your leads are actually leaking, in about 10 minutes.">
+<style>
+  :root{
+    --bg:#F5F7F8;
+    --surface:#FFFFFF;
+    --surface-2:#EDF1F2;
+    --text:#0E1418;
+    --muted:#5B6B70;
+    --line:#D9E0E2;
+    --accent:#0E8F72;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#E1F3EE;
+    --warn:#C4501F;
+    --shadow: 0 1px 2px rgba(14,20,24,.06), 0 8px 24px rgba(14,20,24,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B0F11; --surface:#12181B; --surface-2:#171F22; --text:#EAF1F1;
+      --muted:#93A3A6; --line:#243033; --accent:#35D6AC; --accent-ink:#06201A;
+      --accent-soft:#12332B; --warn:#F0824A;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B0F11; --surface:#12181B; --surface-2:#171F22; --text:#EAF1F1;
+    --muted:#93A3A6; --line:#243033; --accent:#35D6AC; --accent-ink:#06201A;
+    --accent-soft:#12332B; --warn:#F0824A;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Instrument Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+    padding-left:max(20px, env(safe-area-inset-left,0px));
+    padding-right:max(20px, env(safe-area-inset-right,0px));
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;}
+  [hidden]{display:none!important;}
+  .wrap{max-width:920px;margin:0 auto;}
+  .mono{font-family:'IBM Plex Mono', ui-monospace, Menlo, monospace;}
+
+  header.top{
+    position:sticky; top:0;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    z-index:10;
+  }
+  .top-inner{
+    max-width:920px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;
+    padding-block:14px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.01em;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .brand-name{font-family:'Big Shoulders Display', system-ui, sans-serif;font-size:19px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
+  .top-cta{
+    font-family:'IBM Plex Mono', monospace; font-size:12px;
+    color:var(--accent); border:1px solid var(--accent); border-radius:999px;
+    padding:7px 14px; text-decoration:none; white-space:nowrap;
+  }
+
+  section{padding-block:56px;}
+  section.hero{padding-block:64px 40px;}
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px;
+    color:var(--muted); letter-spacing:.08em; text-transform:uppercase;
+    display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--muted);display:inline-block;}
+
+  h1{
+    font-family:'Big Shoulders Display', system-ui, sans-serif;
+    font-weight:700; font-size:clamp(34px, 6.4vw, 60px); line-height:1.03;
+    letter-spacing:.005em; text-transform:uppercase; text-wrap:balance; margin:0 0 20px;
+  }
+  h1 .hl{color:var(--accent);}
+
+  .lede{font-size:clamp(16px,2vw,19px); color:var(--muted); max-width:58ch; line-height:1.55; margin:0 0 30px;}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--accent); color:var(--accent-ink);
+    font-weight:600; font-size:15px; padding:14px 22px; border-radius:8px; border:none;
+    text-decoration:none; cursor:pointer; box-shadow:var(--shadow);
+  }
+  .btn .arrow{font-family:'IBM Plex Mono',monospace;}
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+  .cta-note{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted);}
+
+  .panel-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:22px; flex-wrap:wrap;}
+  .panel-head h2{font-family:'Big Shoulders Display', system-ui, sans-serif; text-transform:uppercase; font-size:clamp(22px,3.4vw,30px); margin:0;}
+  .panel-head .status{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--warn);
+    border:1px solid var(--warn); border-radius:999px; padding:5px 12px; white-space:nowrap;
+  }
+
+  .diag-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  @media (max-width:620px){ .diag-grid{grid-template-columns:1fr;} }
+  .diag-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;
+  }
+  .diag-code{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--warn); letter-spacing:.05em; display:flex; align-items:center; gap:8px;}
+  .diag-code .led{width:7px;height:7px;border-radius:50%;background:var(--warn);}
+  .diag-title{font-weight:700; font-size:16.5px;}
+  .diag-body{color:var(--muted); font-size:14.5px; line-height:1.5;}
+
+  .steps{display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line);}
+  .step{display:grid; grid-template-columns:64px 1fr; gap:18px; padding-block:22px; border-bottom:1px solid var(--line);}
+  .step-num{font-family:'IBM Plex Mono', monospace; color:var(--accent); font-size:14px; padding-top:2px;}
+  .step h3{margin:0 0 6px; font-size:17px;}
+  .step p{margin:0; color:var(--muted); font-size:14.5px; line-height:1.55; max-width:56ch;}
+
+  .form-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:clamp(20px,4vw,36px); box-shadow:var(--shadow);}
+  .form-top{margin-bottom:22px;}
+  .form-top h2{font-family:'Big Shoulders Display', system-ui, sans-serif; text-transform:uppercase; font-size:clamp(22px,3.4vw,28px); margin:0 0 8px;}
+  .form-top p{color:var(--muted); margin:0; font-size:14.5px; max-width:52ch;}
+
+  .field{display:flex; flex-direction:column; gap:6px; margin-bottom:16px;}
+  .field label{font-family:'IBM Plex Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);}
+  .field input, .field select, .field textarea{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    color:var(--text); font-family:inherit; font-size:15px; padding:12px 13px; width:100%;
+  }
+  .field textarea{resize:vertical; min-height:76px;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:560px){ .grid-2{grid-template-columns:1fr;} }
+
+  .submit-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:6px;}
+  .privacy-note{font-size:12.5px; color:var(--muted);}
+
+  #confirm{display:none; text-align:center; padding:34px 16px;}
+  #confirm.show{display:block;}
+  #confirm .mark{
+    width:44px;height:44px;border-radius:50%;background:var(--accent-soft);
+    color:var(--accent); display:flex; align-items:center; justify-content:center;
+    margin:0 auto 16px; font-size:20px; font-family:'IBM Plex Mono',monospace;
+  }
+  #confirm h3{margin:0 0 8px;}
+  #confirm p{color:var(--muted); margin:0; font-size:14.5px;}
+
+  footer{border-top:1px solid var(--line); padding-block:28px 40px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;}
+  footer .mono{color:var(--muted); font-size:12px;}
+  footer a{color:var(--muted); text-decoration:none;}
+  footer a:hover{color:var(--accent);}
+  ::selection{background:var(--accent-soft); color:var(--text);}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand">
+        <span class="dot"></span>
+        <span class="brand-name">Systems with Sabir</span>
+      </div>
+      <a class="top-cta" href="#scan">Get the scan →</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow mono">Revenue Systems Diagnostic</div>
+    <h1>Your leads aren't<br>cold. Your <span class="hl">follow&#8209;up</span> is.</h1>
+    <p class="lede">
+      If you're running a coaching business, a course, or an agency and leads still slip through
+      the cracks between the ad click and the sale — it's rarely the offer. It's almost always
+      what happens (or doesn't happen) in the 60 minutes after someone raises their hand.
+    </p>
+    <div class="cta-row">
+      <a class="btn" href="#scan"><span>Request your free Revenue System Scan</span><span class="arrow">→</span></a>
+      <span class="cta-note">10 minutes · no pitch, just findings</span>
+    </div>
+  </section>
+
+  <section id="diagnostics">
+    <div class="panel-head">
+      <h2>Common fault codes</h2>
+      <span class="status mono">4 of 4 checked</span>
+    </div>
+    <div class="diag-grid">
+      <div class="diag-card">
+        <div class="diag-code"><span class="led"></span>LEAD&#8209;DELAY</div>
+        <div class="diag-title">New leads sit for hours before anyone reaches them</div>
+        <div class="diag-body">Interest is highest in the first few minutes. Past the first hour, most people have already moved on — or found someone who answered faster.</div>
+      </div>
+      <div class="diag-card">
+        <div class="diag-code"><span class="led"></span>NO&#8209;QUALIFY</div>
+        <div class="diag-title">You can't tell a buyer from a browser until the call</div>
+        <div class="diag-body">Every lead gets the same treatment, so your calendar fills with tire-kickers while the serious ones wait in the same queue.</div>
+      </div>
+      <div class="diag-card">
+        <div class="diag-code"><span class="led"></span>MANUAL&#8209;CHASE</div>
+        <div class="diag-title">You or your team are still doing follow-up by hand</div>
+        <div class="diag-body">Texting, emailing, DMing one lead at a time doesn't scale — and it's the first thing that gets skipped when things get busy.</div>
+      </div>
+      <div class="diag-card">
+        <div class="diag-code"><span class="led"></span>BROKEN&#8209;HANDOFF</div>
+        <div class="diag-title">Your site, funnel, and CRM don't actually talk</div>
+        <div class="diag-body">A lead can fill a form, book a call, and buy — and your system still can't tell you which ad, which page, or which message actually worked.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="panel-head">
+      <h2>How the scan works</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num mono">01</div>
+        <div><h3>Tell me about your setup</h3><p>60-second form below — what you run, what tools you're on, and where leads seem to disappear.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num mono">02</div>
+        <div><h3>I look under the hood</h3><p>I trace your actual lead path — ad or content, to landing page, to CRM, to first contact — and flag exactly where it breaks.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num mono">03</div>
+        <div><h3>You get the findings, no pitch required</h3><p>A short written scan back to you: what's leaking, what it's likely costing you, and what fixing it would take. What you do with it is up to you.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="scan">
+    <div class="form-card">
+      <div id="formview">
+        <div class="form-top">
+          <h2>Request your scan</h2>
+          <p>Takes about a minute. I read every one of these myself.</p>
+        </div>
+        <form id="scanForm">
+          <div class="grid-2">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required autocomplete="email">
+            </div>
+          </div>
+          <div class="field">
+            <label for="biztype">What do you run?</label>
+            <select id="biztype" name="biztype" required>
+              <option value="" disabled selected>Select one</option>
+              <option>Trading / finance coaching</option>
+              <option>Coaching or course business (other)</option>
+              <option>Marketing or creative agency</option>
+              <option>Service-based business</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pain">Where does it seem to break down most?</label>
+            <select id="pain" name="pain" required>
+              <option value="" disabled selected>Select one</option>
+              <option>LEAD-DELAY — leads sit before anyone follows up</option>
+              <option>NO-QUALIFY — can't tell good leads from bad ones</option>
+              <option>MANUAL-CHASE — still following up by hand</option>
+              <option>BROKEN-HANDOFF — tools don't talk to each other</option>
+              <option>Not sure — that's what I want the scan to tell me</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="notes">Anything else worth knowing? (optional)</label>
+            <textarea id="notes" name="notes" placeholder="e.g. what CRM/funnel tool you're on, roughly how many leads a month"></textarea>
+          </div>
+          <div class="submit-row">
+            <button class="btn" type="submit"><span>Send my scan request</span><span class="arrow">→</span></button>
+            <span class="privacy-note">No spam. Used only to prepare your scan.</span>
+          </div>
+          <p id="formError" style="display:none; color:var(--warn); font-size:13.5px; margin:12px 0 0;">
+            Something went wrong sending that — please try again in a moment, or email sabir directly.
+          </p>
+        </form>
+      </div>
+      <div id="confirm">
+        <div class="mark">✓</div>
+        <h3>Request received</h3>
+        <p>I'll look at what you shared and get back to you personally with your scan.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="mono">© 2026 Systems with Sabir</span>
+    <a class="mono" href="https://www.instagram.com/systemswithsabir/" target="_blank" rel="noopener">@systemswithsabir</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  try{
+    var form = document.getElementById('scanForm');
+    var formview = document.getElementById('formview');
+    var confirmEl = document.getElementById('confirm');
+    var errorNote = document.getElementById('formError');
+    if(form){
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        if(btn){ btn.disabled = true; btn.style.opacity = '0.7'; }
+        if(errorNote){ errorNote.style.display = 'none'; }
+        var data = new FormData(form);
+        fetch('https://formspree.io/f/xoevvgrw', {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        }).then(function(res){
+          if(res.ok){
+            formview.style.display = 'none';
+            confirmEl.classList.add('show');
+          } else {
+            throw new Error('bad status');
+          }
+        }).catch(function(){
+          if(btn){ btn.disabled = false; btn.style.opacity = '1'; }
+          if(errorNote){ errorNote.style.display = 'block'; }
+        });
+      });
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
+
